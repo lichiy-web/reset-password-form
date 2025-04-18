@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
 import { resetPassword } from '../../api/api';
+import toast from 'react-hot-toast';
 YupPassword(Yup);
 
 const initialValues = {
@@ -37,13 +38,16 @@ const ResetForm = () => {
   }, [searchParams, navigate, token]);
 
   const handleSubmit = ({ password }, actions) => {
-    console.log('password = ', password);
     const creds = {
       token: token.current,
       password,
     };
-    resetPassword(creds).then(() => {
+    resetPassword(creds).then(data => {
+      console.log('data = ', data);
       navigate('/');
+      toast.success('Password has been successfully reset.', {
+        duration: 4000,
+      });
     });
     actions.resetForm();
   };
