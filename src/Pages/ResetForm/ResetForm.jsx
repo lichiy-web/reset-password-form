@@ -1,9 +1,10 @@
 import css from './ResetForm.module.css';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import YupPassword from 'yup-password';
+import { resetPassword } from '../../api/api';
 YupPassword(Yup);
 
 const initialValues = {
@@ -24,17 +25,26 @@ const resetPasswordFormSchema = Yup.object().shape({
 });
 
 const ResetForm = () => {
-  const [token, setToken] = useState(null);
+  const token = useRef(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setToken(() => searchParams.get('token'));
-    const hasToken = Boolean(token);
+    token.current = searchParams.get('token');
+    console.log(`token = ${token.current}`);
+    const hasToken = Boolean(token.current);
     if (!hasToken) navigate('/404', { replace: true });
   }, [searchParams, navigate, token]);
 
-  const handleSubmit = (values, actions) => {
+  const handleSubmit = ({ password }, actions) => {
+    console.log('password = ', password);
+    const creds = {
+      token: token.current,
+      password,
+    };
+    resetPassword(creds).then(() => {
+      navigate('/');
+    });
     actions.resetForm();
   };
   return (

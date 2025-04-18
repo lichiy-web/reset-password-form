@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef, useId } from 'react';
 import './App.css';
 import ResetForm from '../../Pages/ResetForm/ResetForm';
 import { Route, Routes } from 'react-router-dom';
@@ -10,7 +9,7 @@ function App() {
     <div className="main-container">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/reset-pwd" element={<ResetForm />} />
+        <Route path="/auth/reset-password" element={<ResetForm />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
